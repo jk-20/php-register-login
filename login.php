@@ -22,7 +22,6 @@ font-family: 'Noto Serif', serif;
 background: -webkit-linear-gradient(to right, #1565C0, #b92b27);  /* Chrome 10-25, Safari 5.1-6 */
 background: linear-gradient(to right, #1565C0, #b92b27);
     }
-   
     
     </style>
 </head>
@@ -32,7 +31,7 @@ background: linear-gradient(to right, #1565C0, #b92b27);
 <div class="container ">
 <div class="row justify-content-center">
 <div class="col-sm-4 border  bg-white">
-<h4 class="text-center text-primary">CREATE ACCOUNT</h4>
+<h4 class="text-center text-primary">Login</h4>
 
 <form action="<?php echo $_SERVER['PHP_SELF']; ?>">
 
@@ -40,32 +39,23 @@ background: linear-gradient(to right, #1565C0, #b92b27);
 <label for="name">User Name</label>
 <input type="text" class="form-control" name="name">
 
-</div class="style">
-<div class="form-group">
-<label for="email">E-mail</label>
-<input type="email" class="form-control" name="email">
-
-</div>
 <div class="form-group">
 <label for="password">Password</label>
 <input type="password" class="form-control" name="password">
 
 </div>
-<div class="form-group">
-<label for="confirm-password">Confirm-password</label>
-<input type="password" class="form-control" name="confirm-password">
 
-</div>
 <div class="form-group">
 
-<input type="submit" class="form-control btn text-white" name="submit" value="REGISTER">
+<input type="submit" class="form-control btn text-white" name="submit" value="Sign In">
 
 </div>
 
 </form>
+<p>Don't have an account ? <a href="index.php">Sign Up here</a> </p>
 
-<p>Have already an account ? <a href="login.php">Login Here</a> </p>
 </div>
+
 
 
 
