@@ -1,5 +1,32 @@
 <?php include "includes/db.php"; ?>
+<?php 
 
+$msg = '';
+if(isset($_POST['submit'])){
+    $username = $_POST['username'];
+    $email = $_POST['email'];
+    $password = $_POST['password'];
+    $confirm_password = $_POST['confirm-password'];
+
+if($password === $confirm_password){
+    $sql = "INSERT INTO users(username,email,pass,user_role) VALUES('$username','$email','$password','visiter')";
+    $result = mysqli_query($conn,$sql);
+    if(!$result){
+      
+        echo "error".mysqli_error($conn);
+
+    }
+}else{
+    $msg = " <p class='text-center text-danger'>Both password should be same</p> ";
+}
+
+
+}
+
+
+
+
+?>
 
 
 <!DOCTYPE html>
@@ -26,12 +53,12 @@ font-family: 'Noto Serif', serif;
 background: -webkit-linear-gradient(to right, #1565C0, #b92b27);  /* Chrome 10-25, Safari 5.1-6 */
 background: linear-gradient(to right, #1565C0, #b92b27);
     }
+   
     .navbar {
         background: #b92b27;  /* fallback for old browsers */
 background: -webkit-linear-gradient(to right, #1565C0, #b92b27);  /* Chrome 10-25, Safari 5.1-6 */
 background: linear-gradient(to right, #1565C0, #b92b27);
     }
- 
     </style>
 </head>
 <body>
@@ -66,37 +93,46 @@ background: linear-gradient(to right, #1565C0, #b92b27);
 
 </div>
 
-
+<p class='text-center text-danger'></p>
 </div>
 <br>
 <div class="container ">
 <div class="row justify-content-center">
 <div class="col-sm-4 border  bg-white">
-<h4 class="text-center text-primary">Login</h4>
+<h4 class="text-center text-primary">CREATE ACCOUNT</h4>
 
-<form action="<?php echo $_SERVER['PHP_SELF']; ?>">
-
+<form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
+<?php echo $msg; ?>
 <div class="form-group">
 <label for="name">User Name</label>
-<input type="text" class="form-control" name="name">
+<input type="text" class="form-control" name="username">
 
+</div class="style">
+<div class="form-group">
+<label for="email">E-mail</label>
+<input type="email" class="form-control" name="email">
+
+</div>
 <div class="form-group">
 <label for="password">Password</label>
 <input type="password" class="form-control" name="password">
 
 </div>
+<div class="form-group">
+<label for="confirm-password">Confirm-password</label>
+<input type="password" class="form-control" name="confirm-password">
 
+</div>
 <div class="form-group">
 
-<input type="submit" class="form-control btn text-white" name="submit" value="Sign In">
+<input type="submit" class="form-control btn text-white" name="submit" value="REGISTER">
 
 </div>
 
 </form>
-<p>Don't have an account ? <a href="index.php">Sign Up here</a> </p>
 
+<p>Have already an account ? <a href="login.php">Login Here</a> </p>
 </div>
-
 
 
 
