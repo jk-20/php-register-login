@@ -1,4 +1,37 @@
 <?php include "includes/db.php"; ?>
+<?php session_start(); ?>
+<?php 
+if(isset($_POST['submit'])){
+
+  $username = $_POST['username'];
+  $password = $_POST['password'];
+
+  $username = mysqli_real_escape_string($conn,$username);
+  $password = mysqli_real_escape_string($conn,$password);
+
+$query = "SELECT * FROM users WHERE username = '$username'";
+$result = mysqli_query($conn,$query);
+if(!$result){
+  die("query failed".mysqli_error($conn));
+}
+while($row=mysqli_fetch_array($result)){
+
+$user_id= $row['id'];
+$db_username = $row['username'];
+$db_password = $row['pass'];
+
+}
+if(password_verify($password,$db_password)){
+  $_SESSION['username'] = $db_username;
+  $_SESSION['pass'] = $db_password;
+  header("Location: user.php");
+}
+
+}
+
+
+?>
+
 
 
 
@@ -45,9 +78,7 @@ background: linear-gradient(to right, #1565C0, #b92b27);
   </button>
   <div class="collapse navbar-collapse" id="navbarNav">
     <ul class="navbar-nav">
-      <li class="nav-item active">
-        <a class="nav-link text-white" href="index.php">Home <span class="sr-only">(current)</span></a>
-      </li>
+      
       <li class="nav-item">
         <a class="nav-link text-white" href="login.php">Login</a>
       </li>
@@ -74,11 +105,11 @@ background: linear-gradient(to right, #1565C0, #b92b27);
 <div class="col-sm-4 border  bg-white">
 <h4 class="text-center text-primary">Login</h4>
 
-<form action="<?php echo $_SERVER['PHP_SELF']; ?>">
+<form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
 
 <div class="form-group">
 <label for="name">User Name</label>
-<input type="text" class="form-control" name="name">
+<input type="text" class="form-control" name="username">
 
 <div class="form-group">
 <label for="password">Password</label>
@@ -93,7 +124,7 @@ background: linear-gradient(to right, #1565C0, #b92b27);
 </div>
 
 </form>
-<p>Don't have an account ? <a href="index.php">Sign Up here</a> </p>
+<p>Don't have an account ? <a href="register.php">Sign Up here</a> </p>
 
 </div>
 
