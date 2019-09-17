@@ -61,7 +61,7 @@ if($password === $confirm_password){
         <a class="nav-link text-white" href="login.php">Login</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link text-white" href="register.php">Sign up</a>
+        <a class="nav-link text-white" href="index.php">Sign up</a>
       </li>
     
     </ul>
