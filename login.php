@@ -1,13 +1,27 @@
 <?php include "includes/db.php"; ?>
 <?php session_start(); ?>
 <?php 
+  $usernameErr = $passwordErr = "";
+$username = $password = "";
 if(isset($_POST['submit'])){
 
-  $username = $_POST['username'];
-  $password = $_POST['password'];
-
-  $username = mysqli_real_escape_string($conn,$username);
-  $password = mysqli_real_escape_string($conn,$password);
+  
+    if (empty($_POST["username"])) {
+               $usernameErr = "<p class='text-center alert-danger'>username is required !!</p>";
+            }else {
+               $username = test_input($_POST["username"]);
+            }
+            
+    if (empty($_POST["password"])) {
+               $passwordErr = "<p class='text-center alert-danger'>password is required  !!</p>";
+            }else {
+               $password = test_input($_POST["password"]);
+            }
+  
+     if(empty($usernameErr) && empty($passwordErr)){
+         
+         $username = mysqli_real_escape_string($conn,$username);
+         $password = mysqli_real_escape_string($conn,$password);
 
 $query = "SELECT * FROM users WHERE username = '$username'";
 $result = mysqli_query($conn,$query);
@@ -26,9 +40,22 @@ if(password_verify($password,$db_password)){
   $_SESSION['pass'] = $db_password;
   header("Location: user.php");
 }
+         
+     }
+
+  
 
 }
 
+function test_input($data) {
+             global $conn;
+            $data = trim($data);
+            $data = stripslashes($data);
+            $data = htmlspecialchars($data);
+          
+             
+            return $data;
+         }
 
 ?>
 
@@ -39,6 +66,7 @@ if(password_verify($password,$db_password)){
 <div class="container">
 <div class="row">
 <div class="col-sm-12">
+
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <a class="navbar-brand" href="#">blog</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -73,15 +101,19 @@ if(password_verify($password,$db_password)){
 <div class="col-sm-4 border  bg-white">
 <h4 class="text-center text-primary">Login</h4>
 
+
 <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
 
 <div class="form-group">
+
 <label for="name">User Name</label>
-<input type="text" class="form-control" name="username">
+<input type="text" class="form-control" name="username"><?php echo $usernameErr; ?>
+</div>
 
 <div class="form-group">
+
 <label for="password">Password</label>
-<input type="password" class="form-control" name="password">
+<input type="password" class="form-control" name="password"><?php echo $passwordErr; ?>
 
 </div>
 
@@ -96,12 +128,15 @@ if(password_verify($password,$db_password)){
 
 </div>
 
-
+<div class="col-sm-2">
+    
+    
+</div>
 
 
 </div>
+    </div>
 
-</div>
-</div>
+
 
 <?php include "includes/footer.php"; ?>

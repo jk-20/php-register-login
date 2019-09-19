@@ -3,42 +3,100 @@
 <?php 
 
 $msg = '';
+ // define variables and set to empty values
+         $usernameErr = $emailErr = $passwordErr = $confirmpassErr = "";
+         $username = $email = $password = $confirm_password = "";
+         
 if(isset($_POST['submit'])){
-    $username = $_POST['username'];
-    $email = $_POST['email'];
-    $password = $_POST['password'];
-    $confirm_password = $_POST['confirm-password'];
-
-$username = mysqli_real_escape_string($conn,$username);
-$email = mysqli_real_escape_string($conn,$email);
-$password = mysqli_real_escape_string($conn,$password);
-$confirm_password = mysqli_real_escape_string($conn,$confirm_password);
-$crypt_pass = password_hash($password,PASSWORD_BCRYPT,[10]);
-
+    
+   
+            
+            if (empty($_POST["username"])) {
+               $usernameErr = "<p class='text-center alert-danger'>username is required !!</p>";
+            }else {
+               $username = test_input($_POST["username"]);
+            }
+            
+            if (empty($_POST["email"])) {
+               $emailErr = "<p class='text-center alert-danger'>Email is required  !!</p>";
+            }else {
+               $email = test_input($_POST["email"]);
+               
+               // check if e-mail address is well-formed
+               if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                  $emailErr = "<p class='text-center alert-danger'>Invalid email format  !!</p>"; 
+               }
+            }
+            
+           if (empty($_POST["password"])) {
+               $passwordErr = "<p class='text-center alert-danger'>password is required  !!</p>";
+            }else {
+               $password = test_input($_POST["password"]);
+            }
+            if (empty($_POST["confirm-password"])) {
+               $confirmpassErr = "<p class='text-center alert-danger'> confirm password is required !!</p>";
+            }else {
+               $confirm_password = test_input($_POST["confirm-password"]);
+            }
+//    $sql = mysqli_query($conn,"SELECT * FROM users WHERE username ='$username'");
+//    if(mysqli_num_rows($sql)>0){
+//        $msg ="sorry username already register try with new one";
+//    
+//    }
+//     $sql = mysqli_query($conn,"SELECT * FROM users WHERE email ='$email'");
+//    if(mysqli_num_rows($sql)>0){
+//        $msg ="sorry email already register try with new one";
+//        
+//    }
+//      
+            
+           
+    if(empty($usernameErr) && empty($emailErr) && empty($passwordErr) && empty($confirmpassErr)){
+        
+        
 
 if($password === $confirm_password){
-    $sql = "INSERT INTO users(username,email,pass,user_role) VALUES('$username','$email','$crypt_pass','visiter')";
+    
+    $username = mysqli_real_escape_string($conn, $username);
+    $email = mysqli_real_escape_string($conn, $email);
+    $password = mysqli_real_escape_string($conn, $password);
+    $crypt_pass = password_hash($password,PASSWORD_BCRYPT,[10]);
+    
+      $sql = "INSERT INTO users(username,email,pass,user_role) VALUES('$username','$email','$crypt_pass','visiter')";
     $result = mysqli_query($conn,$sql);
     if($result){
       
     $msg = " <p class='text-center alert-success'>Registered successfully!!</p> ";
-        
-       
-
     }else{
 
         $msg = " <p class='text-center alert-danger'>something wrong !!</p> ";
 
     }
-}else{
+               
+               
+           }else{
     $msg = " <p class='text-center alert-danger'>Both password should be same</p> ";
 }
 
+  
+   
+    }
+     
+          
 
 }
 
 
-
+  
+         function test_input($data) {
+             global $conn;
+            $data = trim($data);
+            $data = stripslashes($data);
+            $data = htmlspecialchars($data);
+          
+             
+            return $data;
+         }
 
 ?>
 
@@ -85,24 +143,25 @@ if($password === $confirm_password){
 
 <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
 <?php echo $msg; ?>
+<?php echo $usernameErr; ?>
 <div class="form-group">
 <label for="name">User Name</label>
-<input type="text" class="form-control" name="username">
-
-</div class="style">
-<div class="form-group">
-<label for="email">E-mail</label>
-<input type="email" class="form-control" name="email">
+<input type="text" class="form-control" name="username" value="">
 
 </div>
 <div class="form-group">
-<label for="password">Password</label>
-<input type="password" class="form-control" name="password">
+<label for="email">E-mail</label><?php echo $emailErr ;?>
+<input type="email" class="form-control" name="email" value="">
 
 </div>
 <div class="form-group">
-<label for="confirm-password">Confirm-password</label>
-<input type="password" class="form-control" name="confirm-password">
+<label for="password">Password</label><?php echo  $passwordErr;?>
+<input type="password" class="form-control" name="password" value="">
+
+</div>
+<div class="form-group">
+<label for="confirm-password">Confirm-password</label><?php echo $confirmpassErr ;?>
+<input type="password" class="form-control" name="confirm-password" value="">
 
 </div>
 <div class="form-group">
@@ -121,6 +180,6 @@ if($password === $confirm_password){
 </div>
 
 </div>
-</div>
+
 
 <?php include "includes/footer.php"; ?>
