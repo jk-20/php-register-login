@@ -28,18 +28,25 @@ $result = mysqli_query($conn,$query);
 if(!$result){
   die("query failed".mysqli_error($conn));
 }
-while($row=mysqli_fetch_array($result)){
 
+while($row=mysqli_fetch_array($result)){
+ 
 $user_id= $row['id'];
 $db_username = $row['username'];
 $db_password = $row['pass'];
 
-}
+
 if(password_verify($password,$db_password)){
+ 
   $_SESSION['username'] = $db_username;
   $_SESSION['pass'] = $db_password;
   header("Location: user.php");
 }
+else{
+  $msg = "<p class='text-center alert-danger'>sorry !! you are not registered User</p>";
+}
+}
+
          
      }
 
