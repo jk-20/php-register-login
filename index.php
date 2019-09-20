@@ -1,25 +1,46 @@
 <?php include "includes/db.php"; ?>
 <?php session_start(); ?>
 <?php 
-
+  function email_exits($email){
+   global $conn;
+   $sql = mysqli_query($conn,"SELECT * FROM users WHERE email = '$email'");
+  
+   if(mysqli_num_rows($sql)>0){
+       return true;
+   }else{
+       return false;
+   }
+}
+function username_exits($username){
+global $conn;
+   $sql = mysqli_query($conn,"SELECT * FROM users WHERE username = '$username'");
+   
+   if(mysqli_num_rows($sql)>0){
+       return true;
+   }else{
+       return false;
+   }
+}
 $msg = '';
  // define variables and set to empty values
          $usernameErr = $emailErr = $passwordErr = $confirmpassErr = "";
          $username = $email = $password = $confirm_password = "";
          
 if(isset($_POST['submit'])){
-    
-   
-            
+      
+
+
             if (empty($_POST["username"])) {
                $usernameErr = "<p class='text-center alert-danger'>username is required !!</p>";
-            }else {
+            }
+            else {
                $username = test_input($_POST["username"]);
             }
             
             if (empty($_POST["email"])) {
                $emailErr = "<p class='text-center alert-danger'>Email is required  !!</p>";
-            }else {
+            }
+            else {
                $email = test_input($_POST["email"]);
                
                // check if e-mail address is well-formed
@@ -33,11 +54,27 @@ if(isset($_POST['submit'])){
             }else {
                $password = test_input($_POST["password"]);
             }
-            if (empty($_POST["confirm-password"])) {
+            if (empty($_POST["confirm-password"])){
                $confirmpassErr = "<p class='text-center alert-danger'> confirm password is required !!</p>";
             }else {
                $confirm_password = test_input($_POST["confirm-password"]);
             }
+
+            if(($_POST["password"]) != ($_POST["confirm-password"])){
+               $confirmpassErr = "<p class='text-center alert-danger'> both pass should be same !!</p>";
+            }
+             
+   if(username_exits($username)){
+               
+      $usernameErr = "<p class='text-center alert-danger'>Username already exits try with other one!!</p>";
+  
+}
+if(email_exits($email)){
+               
+   $emailErr = "<p class='text-center alert-danger'> E-mail already exits try with other one!!</p>";
+
+
+}    
 //    $sql = mysqli_query($conn,"SELECT * FROM users WHERE username ='$username'");
 //    if(mysqli_num_rows($sql)>0){
 //        $msg ="sorry username already register try with new one";
@@ -55,7 +92,7 @@ if(isset($_POST['submit'])){
         
         
 
-if($password === $confirm_password){
+
     
     $username = mysqli_real_escape_string($conn, $username);
     $email = mysqli_real_escape_string($conn, $email);
@@ -74,10 +111,7 @@ if($password === $confirm_password){
     }
                
                
-           }else{
-    $msg = " <p class='text-center alert-danger'>Both password should be same</p> ";
-}
-
+          
   
    
     }
@@ -97,6 +131,9 @@ if($password === $confirm_password){
              
             return $data;
          }
+
+       
+        
 
 ?>
 
